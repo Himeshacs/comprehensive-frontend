@@ -60,7 +60,13 @@ export const filterToQueryString = (filter: ComplexFilter | null): string => {
 // Parse query string to filter
 export const queryStringToFilter = (queryString: string): ComplexFilter | null => {
   try {
-    return JSON.parse(queryString);
+    const parsed = JSON.parse(queryString);
+    // Ensure the parsed object has the correct type
+    return {
+      conditions: parsed.conditions || [],
+      logicalOperator: parsed.logicalOperator === "OR" ? "OR" : "AND",
+      groups: parsed.groups || [],
+    };
   } catch {
     return null;
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { ThemeToggle } from "../ThemeToggle";
 
 export const Navigation: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -91,6 +92,7 @@ export const Navigation: React.FC = () => {
 
         {/* User Info & Logout */}
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <ThemeToggle />
           {isAuthenticated && user ? (
             <>
               <span style={{ color: "white", fontSize: "0.9rem" }}>

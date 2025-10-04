@@ -1,28 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-
+import { AppProviders } from "./providers/AppProviders";
 import "./App.css";
-import { AuthProvider } from "./context/AuthContext";
-import { Navigation } from "./components/Layout/Navigations";
 import { AppRoutes } from "./components/Routes/AppRoutes";
-
-const queryClient = new QueryClient();
+import { Navigation } from "./components/Layout/Navigations";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router>
-          <div className="App">
-            <Navigation />
-            <main className="container">
-              <AppRoutes />
-            </main>
-          </div>
-        </Router>
-      </AuthProvider>
-    </QueryClientProvider>
+    <AppProviders>
+      <div className="App">
+        <Navigation />
+        <main className="container">
+          <AppRoutes />
+        </main>
+      </div>
+    </AppProviders>
   );
 }
 

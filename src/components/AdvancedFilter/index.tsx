@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ComplexFilter, FilterCondition, FilterField } from "../../types/filter";
+import { ComplexFilter, FilterCondition, FilterField, createEmptyFilter } from "../../types/filter";
 
 interface AdvancedFilterProps {
   fields: FilterField[];
@@ -8,7 +8,7 @@ interface AdvancedFilterProps {
 }
 
 export const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ fields, onFilterChange, initialFilter }) => {
-  const [filter, setFilter] = useState<ComplexFilter>(initialFilter || { conditions: [], logicalOperator: "AND" });
+  const [filter, setFilter] = useState<ComplexFilter>(initialFilter || createEmptyFilter());
   const [isExpanded, setIsExpanded] = useState(false);
 
   const addCondition = () => {
@@ -18,7 +18,7 @@ export const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ fields, onFilter
       value: "",
     };
 
-    const updatedFilter = {
+    const updatedFilter: ComplexFilter = {
       ...filter,
       conditions: [...filter.conditions, newCondition],
     };
@@ -29,13 +29,13 @@ export const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ fields, onFilter
   const updateCondition = (index: number, updates: Partial<FilterCondition>) => {
     const updatedConditions = filter.conditions.map((condition, i) => (i === index ? { ...condition, ...updates } : condition));
 
-    const updatedFilter = { ...filter, conditions: updatedConditions };
+    const updatedFilter: ComplexFilter = { ...filter, conditions: updatedConditions };
     setFilter(updatedFilter);
   };
 
   const removeCondition = (index: number) => {
     const updatedConditions = filter.conditions.filter((_, i) => i !== index);
-    const updatedFilter = { ...filter, conditions: updatedConditions };
+    const updatedFilter: ComplexFilter = { ...filter, conditions: updatedConditions };
     setFilter(updatedFilter);
 
     // If no conditions left, clear the filter
@@ -53,7 +53,7 @@ export const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ fields, onFilter
   };
 
   const clearFilter = () => {
-    const emptyFilter = { conditions: [], logicalOperator: "AND" };
+    const emptyFilter = createEmptyFilter();
     setFilter(emptyFilter);
     onFilterChange(null);
   };
@@ -226,7 +226,7 @@ export const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ fields, onFilter
                 {condition.field && (
                   <select
                     value={condition.operator}
-                    onChange={(e) => updateCondition(index, { operator: e.target.value as any })}
+                    onChange={(e) => updateCondition(index, { operator: e.target.value as FilterCondition["operator"] })}
                     style={{ padding: "5px", border: "1px solid #ccc", borderRadius: "3px", minWidth: "150px" }}
                   >
                     {getOperatorOptions(fields.find((f) => f.value === condition.field)?.type || "text").map((op) => (
